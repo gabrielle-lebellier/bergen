@@ -166,7 +166,7 @@ class RAG:
             shuffle_labels=True if generator_config is not None and generator_config.init_args.model_name == 'random_answer' else False,
             oracle_provenance=self.oracle_provenance,
             )
-        
+        breakpoint()
         self.metrics = {
             "train": RAGMetrics,
             # lookup metric with dataset name (tuple: dataset_name, split) 

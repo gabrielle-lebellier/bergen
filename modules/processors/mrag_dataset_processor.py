@@ -2,6 +2,7 @@ from ..dataset_processor import Processor
 import datasets
 import os
 
+import numpy as np
 
 class MKQA(Processor):
     def __init__(self, lang, *args, **kwargs):
@@ -70,3 +71,37 @@ class TydiQA(Processor):
         dataset = dataset.remove_columns(['title', 'context', 'answers'])
         return dataset
 
+
+## New In ALPS 2025
+class INCLUDE(Processor): 
+    def __init__(self, langcode="fr", language="French", *args, **kwargs):
+        # TODO: need to have langcode and language as inputs?
+        dataset_name = f'include_{langcode}'
+        self.lang = langcode
+        self.language = language # TODO: need to store both langcode and language?
+        super().__init__(*args, **kwargs, dataset_name=dataset_name)
+
+    def process(self):
+        dataset =  datasets.load_dataset("CohereForAI/include-base-44", self.language)[self.split]
+        breakpoint()
+        # Creating ids
+        dataset = dataset.add_column('id', np.arange(len(dataset))) # TODO: id should be that simple?
+
+        # Renaming column to get "content"
+        dataset = dataset.rename_column("question", "content")
+
+        # Get right answer in "label" column
+        def get_right_answer(row):
+            answer_index = row['answer']
+            if answer_index == 0 :
+                return row['option_a']
+            elif answer_index == 1 : 
+                return row['option_b']
+            elif answer_index == 2 : 
+                return row['option_c']
+            elif answer_index == 3 : 
+                return row['option_d']
+            
+        dataset = dataset.map(lambda example: {'label': [get_right_answer(example)]})
+
+        dataset = dataset.remove_columns(['language', 'country', 'domain', 'subject', 'regional_feature', 'level', 'option_a', 'option_b', 'option_c', 'option_d', 'answer'])

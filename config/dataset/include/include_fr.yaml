@@ -1,0 +1,17 @@
+train:
+    doc: null
+    query: null
+dev:
+    doc:
+      init_args:
+        _target_: modules.processors.mrag_dataset_processor.INCLUDE
+        split: validation
+    query:
+      init_args:
+        _target_: modules.processors.mrag_dataset_processor.INCLUDE
+        split: validation
+        lang: fr
+        language: French
+test:
+    doc: null
+    query: null
