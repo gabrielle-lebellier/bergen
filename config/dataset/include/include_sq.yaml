@@ -10,8 +10,8 @@ dev:
       init_args:
         _target_: modules.processors.mrag_dataset_processor.INCLUDE
         split: test
-        lang: fr
-        language: French
+        lang: sq
+        language: Albanian
 test:
     doc: null
     query: null
